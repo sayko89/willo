@@ -130,6 +130,31 @@ nav a.brand{border-bottom:none}
 .pager a:hover{border-color:var(--aqua);color:#fff}
 .pager a b{display:block;color:#fff;font-size:16px;margin-top:2px}
 .pager a.next{margin-left:auto;text-align:right}
+/* ---- Telefon sürümü (≤760 px); masaüstü düzeni değişmez ---- */
+.menu-btn,.cur,.t-mobile{display:none}
+@media (max-width:760px){
+  section{padding:36px 0}
+  .wrap{padding:0 18px}
+  nav .wrap{height:52px;gap:10px;overflow:visible}
+  nav .wrap>a:not(.brand){display:none}
+  nav .cur{display:block;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;color:#fff;font-size:14px}
+  nav .menu-btn{display:block;margin-left:auto;background:var(--ink2);color:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+  nav.open .wrap{flex-wrap:wrap;height:auto;padding-bottom:10px}
+  nav.open .wrap>a:not(.brand){display:block;flex-basis:100%;padding:12px 4px;border-bottom:1px solid var(--line);font-size:16px}
+  nav.open .wrap>a.on{border-bottom-color:var(--line);color:var(--aqua)}
+  table.stack tr:first-child{display:none}
+  table.stack,table.stack tbody,table.stack tr,table.stack td{display:block;width:100%}
+  table.stack tr{padding:10px 0;border-bottom:1px solid var(--line)}
+  table.stack td{border:none;padding:4px 0}
+  table.stack td::before{content:attr(data-label);display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .t-desktop{display:none}
+  .t-mobile{display:grid;gap:12px}
+  .t-mobile .card h3{margin:0 0 8px;font-size:17px;color:#fff}
+  .t-mobile .card.hl{border-color:var(--aqua)}
+  .t-mobile dl{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin:0;font-size:14px}
+  .t-mobile dd{margin:0;text-align:right;color:#fff}
+  .pager a{max-width:none;flex:1}
+}
 </style>
 </head>
 <body>
@@ -681,6 +706,38 @@ loadResults().finally(()=>{buildSim();requestAnimationFrame(frame)});
   }
   addEventListener('hashchange',route);
   route();
+})();
+</script>
+<script>
+/* Telefon sürümü: sekme menüsü ve tablolar */
+(function(){
+  const nav=document.querySelector('body>nav'),wrap=nav.querySelector('.wrap'),brand=wrap.querySelector('.brand');
+  const cur=document.createElement('span');cur.className='cur';
+  const btn=document.createElement('button');btn.className='menu-btn';btn.type='button';btn.textContent='☰ Bölümler';btn.setAttribute('aria-expanded','false');
+  brand.after(cur,btn);
+  btn.onclick=()=>{const o=nav.classList.toggle('open');btn.setAttribute('aria-expanded',o);btn.textContent=o?'✕ Kapat':'☰ Bölümler'};
+  function sync(){const a=wrap.querySelector('a.on');cur.textContent=a?a.textContent:'';nav.classList.remove('open');btn.setAttribute('aria-expanded','false');btn.textContent='☰ Bölümler'}
+  addEventListener('hashchange',sync);sync();
+  document.querySelectorAll('section.view table').forEach(t=>{
+    const rows=[...t.rows];if(rows.length<2)return;
+    const head=[...rows[0].cells].map(c=>c.textContent.trim());
+    if(head.length<=3){
+      t.classList.add('stack');
+      rows.slice(1).forEach(r=>[...r.cells].forEach((c,i)=>c.dataset.label=head[i]||''));
+    }else if(head.length>4){
+      // wide comparison table: one card per column on phones
+      const box=document.createElement('div');box.className='t-mobile';
+      head.slice(1).forEach((h,j)=>{
+        const card=document.createElement('div');card.className='card'+(j===head.length-2?' hl':'');
+        card.innerHTML='<h3></h3><dl></dl>';card.querySelector('h3').textContent=h;
+        const dl=card.querySelector('dl');
+        rows.slice(1).forEach(r=>{const dt=document.createElement('dt');dt.textContent=r.cells[0].textContent.trim();
+          const dd=document.createElement('dd');dd.textContent=(r.cells[j+1]||{}).textContent||'';dl.append(dt,dd)});
+        if(card.classList.contains('hl'))box.prepend(card);else box.appendChild(card);
+      });
+      t.classList.add('t-desktop');t.after(box);
+    }
+  });
 })();
 </script>
 </body>

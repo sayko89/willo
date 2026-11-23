@@ -171,6 +171,23 @@ python src\data.py            # data/sample/synthetic_pump.csv'yi yeniden üreti
 
 `data/sample/synthetic_pump.csv`: 14 gün, 15 dakika aralıklı **sentetik** pompa verisi. Gerçek ölçüm değildir.
 
+### Tanıtım sayfası: masaüstü ve telefon sürümü
+
+Canlı sayfa: https://sayko89.github.io/willo/ (`site/index.html`, GitHub Pages)
+
+Sayfa kaydırmalı tek sayfa değil, **sekmeli**: üstteki sekmeye basınca yalnız o bölüm açılır. Her bölümün altında Önceki/Sonraki geçişi var. Bir bölüme doğrudan link verilebilir, örneğin canlı prototip için `…/willo/#kacak`, depo simülasyonu için `#depo`.
+
+Ekran genişliğine göre iki sürüm var. Aynı dosya kullanılıyor, düzen 760 px'te değişiyor:
+
+| | Masaüstü (>760 px) | Telefon (≤760 px) |
+|---|---|---|
+| Menü | Bütün sekmeler üst çubukta yan yana | Üst çubukta açık bölümün adı ve **☰ Bölümler** düğmesi; dokununca sekme listesi açılır |
+| Karşılaştırma tablosu (Farkımız) | 6 sütunlu tablo | Her ürün için ayrı kart; NABIZ kartı en üstte ve vurgulu |
+| Varsayımlar ve karar tabloları | Sütunlu tablo | Her satır etiketli bir kart (Varsayım / Durum / Nasıl sınanacak) |
+| Canlı prototip ve grafikler | Simülasyon ve panel yan yana | Alt alta; grafikler ekran genişliğine göre yeniden çiziliyor |
+
+Masaüstünde ve 390 px genişlikte (iPhone boyutu) Chrome ile test edildi: yatay taşma yok, bütün sekmeler açılıyor, grafikler doluyor.
+
 ### Teslim dosyalarını yeniden üretme
 
 ```bash
