@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib import font_manager as fm
 from matplotlib.patches import FancyBboxPatch
 
-REPO = os.environ.get("WILO_REPO", "../wilo-hackathon")
+REPO = os.environ.get("WILO_REPO", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 sys.path.insert(0, REPO)
 for f in ("Inter-Regular.otf", "Inter-Bold.otf", "Inter-SemiBold.otf"):
     fm.fontManager.addfont(f"/usr/share/fonts/opentype/inter/{f}")
