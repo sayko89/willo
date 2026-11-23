@@ -23,7 +23,7 @@ boxes = {
  "03": ((71, 714, 567, 837),
   "Şamandıra depoyu her zaman tam doldurur; Keraflo Tanktronic gibi sistemler seviyeyi elle girilen takvime göre ayarlar, kesinti riski ve suyun depoda bekleme süresi hesaba girmez. Grundfos SCALA2 ve DAB Esybox gibi pompalar kaçakta yalnız evet/hayır alarmı verir; kaçağın debisi, maliyeti ve türü (boru mu, klozet rezervuarı mı) bilinmez."),
  "04": ((624, 714, 1120, 837),
-  "NABIZ, Wilo-Monitor'a eklenen bir modül: yönetici her pazartesi telefonunda “bina su karnesi”ni (depodaki su yaşı, kesinti yedeği, gece kaçağı L/saat–TL/ay–tür) görür, kesinti riski artınca gelen “depoyu doldur” önerisini onaylar. Böylece suyu taze, binayı kesintiye hazır tutar ve tesisatçıyı doğrudan doğru noktaya yönlendirir."),
+  "NABIZ, Wilo-Monitor'a eklenen bir modül: yönetici her pazartesi telefonunda \u201cbina su karnesi\u201dni görür; gece kaçağı L/saat, TL/ay ve tür (boru mu, rezervuar mı) olarak gelir ve tesisatçıya doğrudan iş emri olur. Aynı veriden ikinci kazanç: kesinti riski artınca \u201cdepoyu doldur\u201d, risk düşünce \u201cseviyeyi indir\u201d önerisi; karar yöneticide kalır."),
  "05": ((71, 994, 567, 1117),
   "Pompanın kalkış/duruş zamanları, basınç ve depo seviyesinden binanın tüketim parmak izini öğrenir: kesinti desenini öğrenip depo seviyesi önerir, gece kullanımını kaçaktan ayırıp kaçak debisini ölçer ve kaçağı boru/rezervuar diye sınıflandırır. Simülasyonda debi hatası %10 (basit “pompalanan hacim / süre” yönteminde %131), tür doğruluğu %97; sabit takvim, kesinti takvimi değişince 6 kat fazla susuz saat bıraktı."),
  "06": ((624, 1018, 1120, 1117),
@@ -31,7 +31,7 @@ boxes = {
  "07": ((71, 1298, 567, 1397),
   "Depodaki suyun ortalama bekleme süresi şamandıraya göre 39 saatten 25 saate iner (simülasyon), bulunan her 5 L/saatlik kaçak ayda 3,6 m³ su kurtarır. Takip edeceğimiz ana gösterge: binanın gece kaçak debisi (L/saat); yanında depo su yaşı (saat)."),
  "08": ((624, 1274, 1120, 1397),
-  "Varsayım: 2–50 L/saatlik küçük bir kaçak, 0,1 bar basınç çözünürlüğü ve gece kullanımına rağmen pompanın duruş süresinden ölçülebilir. Hackathon günü 12 V hidrofor düzeneğinde iğneli vanayla kaçak açıp gerçek debiyi teraziyle ölçer, model tahminiyle canlı karşılaştırırız (metrik: ortalama mutlak hata, bulunan en küçük kaçak)."),
+  "Varsayım: 5–50 L/saatlik kaçak, gece kullanımına rağmen pompanın duruş süresinden ölçülebilir. Simülasyonda tahminciyi kurmadığımız bina ve kullanımda bile ≥10 L/sa kaçakların %97'si bulundu; eşik tank boyuyla artıyor (100 L tankta 20 L/sa). Hackathon günü 12 V düzenekte iğneli vanayla kaçak açıp gerçek debiyi teraziyle ölçer, tahminle canlı karşılaştırırız."),
 }
 members = [
  ("Safiye Özkan", "Veri ve yapay zekâ modeli, sunum"),

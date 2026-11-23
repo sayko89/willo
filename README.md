@@ -61,6 +61,8 @@ NABIZ ayrı bir cihaz olarak değil, Wilo'nun uzaktan izleme platformu [Wilo-Mon
   - [`teslim/e-posta.md`](teslim/e-posta.md): teslim e-postası
 - **Tanıtım videosu (opsiyonel):** [`video/Periapsis_NABIZ_Video.mp4`](video/Periapsis_NABIZ_Video.mp4), 3 dk 22 sn, altyazılı ve sessiz; sunum sahneleri ve iki animasyonlu simülasyon (gece kaçağı, taze depo). Seslendirme metni: [`video/NABIZ_video_metni.txt`](video/NABIZ_video_metni.txt)
 - **Kanvas metni ve kaynaklar:** [`docs/canvas-draft.md`](docs/canvas-draft.md)
+- **Ek deneyler (büyük tank, model dışı test):** [`results/strengthen.md`](results/strengthen.md)
+- **Jüri soruları ve cevaplarımız:** [`docs/juri-sorulari.md`](docs/juri-sorulari.md) · **Hızlı kullanıcı anketi:** [`docs/hizli-dogrulama.md`](docs/hizli-dogrulama.md)
 
 <p align="center"><a href="https://sayko89.github.io/willo/#kacak"><img src="docs/img/prototype.png" alt="Canlı prototip: bina kesiti, hidrofor ve NABIZ'ın gördüğü duruş süreleri" width="90%"></a></p>
 

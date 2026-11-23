@@ -177,6 +177,12 @@ Ana test kümesinin dışında, yöntemi zorlayan altı durum denendi (A–F). A
 
 ---
 
+## 4. Ek deneyler: büyük tank ve model dışı test
+
+Ayrıntı: [`strengthen.md`](strengthen.md) (`scripts/run_strengthen.py`).
+- Tespit eşiği tank boyuyla artıyor: 24 L'de 5 L/sa, 50 L'de 10 L/sa, 100 L'de 20 L/sa. Gece sayısını 7'den 14–21'e çıkarmak tespiti artırmıyor, büyük tankta yanlış alarmı artırıyor.
+- Tahminciyi kurmadığımız bina ve kullanımda (eski rezervuar, 2,5–3,5 bar, 2× gürültü): ≥10 L/sa tespit %97, debi hatası %10, yanlış alarm %0.
+
 ## Sınırlar
 - SCe sıfır debi testinin gerçek eşiği ve davranışı bilinmiyor; modeldeki değerler varsayım.
 - Basınç tankının hacmi, ön dolum basıncı ve Wilo'nun gerçek kontrol davranışı varsayım.

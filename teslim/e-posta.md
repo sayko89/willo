@@ -18,7 +18,7 @@ NABIZ, Wilo-Monitor'a eklenen bir modül olarak tasarlandı.
 - **Sunum:** Aynı soruların kaynaklı ve simülasyon sonuçlu ayrıntısı, 10 sayfa (ek 2)
 - **Simülasyon ve tanıtım sayfası:** https://sayko89.github.io/willo/
 
-Doğrulanmamış bilgiler "varsayım" olarak işaretlidir; sayısal sonuçlar simülasyondan gelmektedir.
+Doğrulanmamış bilgiler "varsayım" olarak işaretlidir; sayısal sonuçlar simülasyondan gelmektedir. Yöntemi, tahminciyi kurarken kullanmadığımız bina ve kullanım koşullarında da test ettik (≥10 L/sa kaçaklarda %97 tespit) ve tank boyunun tespit eşiğine etkisini ölçtük; ayrıntılar repodaki results/strengthen.md dosyasında.
 
 Saygılarımızla,
 Periapsis
