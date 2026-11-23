@@ -1,3 +1,5 @@
+<p align="center"><img src="site/assets/periapsis-water.png" alt="Periapsis × Water AI Hackathon 2026 logosu" width="520"></p>
+
 <p align="center">
   <a href="https://sayko89.github.io/willo/"><img src="docs/img/banner.svg" alt="NABIZ — Bodrumdaki hidrofor, binanın su nabzını zaten tutuyor" width="100%"></a>
 </p>
@@ -170,6 +172,12 @@ python src\data.py            # data/sample/synthetic_pump.csv'yi yeniden üreti
 ```
 
 `data/sample/synthetic_pump.csv`: 14 gün, 15 dakika aralıklı **sentetik** pompa verisi. Gerçek ölçüm değildir.
+
+### Kullanıcı anketi (hızlı doğrulama)
+
+Site yöneticileri, kapıcılar ve tesisatçılar için 3 dakikalık anket: **https://form.jotform.com/263266805000045**
+
+Soruların amacı, "site yönetimi depo ve kaçak kararlarını bugün veri olmadan veriyor ve haftalık bir su karnesi işine yarar" varsayımını (kanvas Soru 2 ve Soru 8) sınamak. Gönderme rehberi ve cevap tablosu: [`docs/hizli-dogrulama.md`](docs/hizli-dogrulama.md).
 
 ### Tanıtım sayfası: masaüstü ve telefon sürümü
 
