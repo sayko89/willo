@@ -117,17 +117,30 @@ details summary{cursor:pointer;color:#fff;font-weight:600}
 .advice{background:rgba(46,196,198,.08);border-radius:10px;padding:10px 14px}
 .reportfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}
 footer{padding:36px 0;font-size:13px;color:var(--muted)}
+html{scroll-behavior:auto}
+.view{display:none;min-height:calc(100vh - 57px)}
+.view.active{display:block;animation:viewIn .4s cubic-bezier(.2,.7,.2,1) both}
+@keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view.active{animation:none}}
+nav a{padding:17px 2px;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+nav a.on{color:#fff;border-bottom-color:var(--aqua)}
+nav a.brand{border-bottom:none}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:24px;border-top:1px solid var(--line)}
+.pager a{display:block;text-decoration:none;color:var(--muted);font-size:14px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;max-width:48%}
+.pager a:hover{border-color:var(--aqua);color:#fff}
+.pager a b{display:block;color:#fff;font-size:16px;margin-top:2px}
+.pager a.next{margin-left:auto;text-align:right}
 </style>
 </head>
 <body>
 <nav><div class="wrap">
-  <b>NABIZ</b>
-  <a href="#problem">01 Problem</a><a href="#kim">02 Kimin için</a><a href="#cozum">03 Çözüm</a>
+  <a class="brand" href="#genel"><b>NABIZ</b></a>
+  <a href="#genel">Genel bakış</a><a href="#problem">01 Problem</a><a href="#kim">02 Kimin için</a><a href="#cozum">03 Çözüm</a>
   <a href="#kacak">04 Canlı prototip</a><a href="#depo">05 Depo simülasyonu</a><a href="#fark">06 Farkımız</a>
   <a href="#test">07 Varsayımlar</a><a href="#kaynak">Kaynaklar</a>
 </div></nav>
 
-<header><section style="padding-top:64px"><div class="wrap grid g2" style="align-items:end">
+<section class="view" id="genel" style="padding-top:64px"><div class="wrap grid g2" style="align-items:end">
   <div>
     <div class="tag">Water AI Hackathon 2026 · Wilo Türkiye x imece · Binalar</div>
     <h1>NABIZ</h1>
@@ -147,9 +160,9 @@ footer{padding:36px 0;font-size:13px;color:var(--muted)}
       <span>Gerçek bina verisi</span><span><span class="pill">henüz yok</span></span>
     </div>
   </div>
-</div></section></header>
+</div></section>
 
-<section id="problem"><div class="wrap">
+<section class="view" id="problem"><div class="wrap">
   <div class="tag">01 · Problem</div>
   <h2>Kesintiler depoyu zorunlu kıldı, depo da yeni bir sorun yarattı</h2>
   <div class="grid g3">
@@ -164,7 +177,7 @@ footer{padding:36px 0;font-size:13px;color:var(--muted)}
   </div>
 </div></section>
 
-<section id="kim"><div class="wrap">
+<section class="view" id="kim"><div class="wrap">
   <div class="tag">02 · Kimin için · 03 · Bugün nasıl yapılıyor</div>
   <h2>Site yönetimi bu kararları bugün veri olmadan veriyor</h2>
   <div class="grid g2">
@@ -189,7 +202,7 @@ footer{padding:36px 0;font-size:13px;color:var(--muted)}
   </div>
 </div></section>
 
-<section id="cozum"><div class="wrap">
+<section class="view" id="cozum"><div class="wrap">
   <div class="tag">03 · Çözüm</div>
   <h2>Hidrofor zaten konuşuyor; NABIZ onu Wilo-Monitor'da dinler</h2>
   <div class="chain">
@@ -210,7 +223,7 @@ footer{padding:36px 0;font-size:13px;color:var(--muted)}
   </div>
 </div></section>
 
-<section id="kacak"><div class="wrap">
+<section class="view" id="kacak"><div class="wrap">
   <div class="tag">04 · Canlı prototip · gece kaçağı</div>
   <h2>Pompa gece ne sıklıkla çalışıyor? Kaçağı bu söylüyor</h2>
   <p style="max-width:860px">Gece kimse su kullanmıyorken bodrumdaki hidroforun susması gerekir. Bir yerde su sızıyorsa basınç tankı yavaşça boşalır ve pompa <b>hep aynı aralıkla</b> kendi kendine çalışır. NABIZ bu ritmi dinler: kaç dakikada bir çalıştığından sızan suyun miktarını, basıncın nasıl düştüğünden de kaynağını çıkarır. Aşağıdaki bina tarayıcında simüle ediliyor; NABIZ yalnız bir gerçek binada da okunabilecek iki sinyali görüyor: basınç (0,1 bar adımlı) ve "pompa çalışıyor" bilgisi.</p>
@@ -326,7 +339,7 @@ footer{padding:36px 0;font-size:13px;color:var(--muted)}
   <div class="grid g3" style="margin-top:18px" id="leakstats"></div>
 </div></section>
 
-<section id="depo"><div class="wrap">
+<section class="view" id="depo"><div class="wrap">
   <div class="tag">05 · Depo simülasyonu</div>
   <h2>Takvim değişince sabit kural çöküyor, öğrenen sistem uyum sağlıyor</h2>
   <p>36 kişilik bina, 10 m³ depo, 180 gün. Kesinti takvimi İzmir'deki gibi sıklaşıyor ve Ankara'daki gibi gündüze kayıyor; ayrıca habersiz kesintiler var <span class="pill">senaryo varsayımı</span>. Grafik, kesintiler her gün 08–22 olduktan sonraki bir haftayı gösterir.</p>
@@ -341,7 +354,7 @@ footer{padding:36px 0;font-size:13px;color:var(--muted)}
   </div>
 </div></section>
 
-<section id="fark"><div class="wrap">
+<section class="view" id="fark"><div class="wrap">
   <div class="tag">06 · Farkımız</div>
   <h2>Kaçak alarmı yeni değil; debi, maliyet ve depo tazeliği yeni</h2>
   <div class="card" style="overflow-x:auto">
@@ -358,7 +371,7 @@ footer{padding:36px 0;font-size:13px;color:var(--muted)}
   </div>
 </div></section>
 
-<section id="test"><div class="wrap">
+<section class="view" id="test"><div class="wrap">
   <div class="tag">07 · Varsayımlar ve ilk test</div>
   <h2>Neyi bildiğimizi, neyi bilmediğimizi açıkça yazıyoruz</h2>
   <div class="card" style="overflow-x:auto">
@@ -380,7 +393,7 @@ footer{padding:36px 0;font-size:13px;color:var(--muted)}
   </div>
 </div></section>
 
-<section id="kaynak"><div class="wrap">
+<section class="view" id="kaynak"><div class="wrap">
   <div class="tag">Kaynaklar</div>
   <ol class="src">
     <li>Çalık O., tıpta uzmanlık tezi, Diyarbakır (özet) — <a href="https://acikbilim.yok.gov.tr/handle/20.500.12812/292765">YÖK Açık Bilim</a></li>
@@ -641,6 +654,34 @@ async function loadResults(){
 window.addEventListener('resize',()=>{if(SIM){play.shown=-1;drawNight(SIM.nights[0])}drawWeek()});
 setPlay('pause');
 loadResults().finally(()=>{buildSim();requestAnimationFrame(frame)});
+</script>
+<script>
+(function(){
+  const views=[...document.querySelectorAll('section.view')];
+  const links=[...document.querySelectorAll('nav a[href^="#"]')].filter(a=>!a.classList.contains('brand'));
+  const title=id=>{const a=links.find(l=>l.getAttribute('href')==='#'+id);return a?a.textContent.replace(/^\d+\s*/,''):id};
+  views.forEach((v,i)=>{
+    const prev=views[i-1],next=views[i+1],wrap=v.querySelector('.wrap');
+    if(!wrap)return;
+    const pg=document.createElement('nav');pg.className='pager';pg.setAttribute('aria-label','Bölümler arası geçiş');
+    pg.style.cssText='position:static;background:none;backdrop-filter:none;border-bottom:none';
+    pg.innerHTML=(prev?`<a href="#${prev.id}">← Önceki<b>${title(prev.id)}</b></a>`:'')+(next?`<a class="next" href="#${next.id}">Sonraki →<b>${title(next.id)}</b></a>`:'');
+    wrap.appendChild(pg);
+  });
+  function route(){
+    let id=(location.hash||'').slice(1);
+    if(!views.some(v=>v.id===id))id='genel';
+    views.forEach(v=>v.classList.toggle('active',v.id===id));
+    links.forEach(a=>{const on=a.getAttribute('href')==='#'+id;a.classList.toggle('on',on);
+      if(on){a.setAttribute('aria-current','page');a.scrollIntoView({block:'nearest',inline:'nearest'})}else a.removeAttribute('aria-current')});
+    window.scrollTo(0,0);
+    document.title=(id==='genel'?'':title(id)+' · ')+'NABIZ';
+    // canvases measure their width: redraw once the view is visible
+    requestAnimationFrame(()=>window.dispatchEvent(new Event('resize')));
+  }
+  addEventListener('hashchange',route);
+  route();
+})();
 </script>
 </body>
 </html>
