@@ -19,7 +19,7 @@ boxes = {
  "01": ((71, 458, 567, 557),
   "Kesintiler (İzmir'de 13 ilçede 6 ay gece kesintisi, Ankara'da kontrollü su) apartmanları bodrum deposuna bağımlı yaptı; depoda bekleyen su bozuluyor (Diyarbakır, 200 konut: koliformlu örnek depo girişinde %35, çıkışında %52). Gece kaçakları da ortak faturaya görünmeden yansıyor: 5 L/saat ≈ ayda 3,6 m³ ve ≈241 TL."),
  "02": ((624, 434, 1120, 557),
-  "İlk kullanıcı site yönetim firması ve apartman yöneticisi; önce Wilo SiBoost'lu siteler, sonra basit hidroforlu apartmanlar. Kesinti takvimi değişince depoyu ne kadar dolduracağına, depoyu ne zaman temizleteceğine ve ortak fatura artınca nedenini bulmaya bugün veri olmadan karar veriyor (varsayım, mülakatla doğrulanacak)."),
+  "Önce site yönetim firması ve apartman yöneticisi (önce SiBoost'lu siteler, sonra basit hidroforlu apartmanlar). Depoyu kesinti duyurusuna göre elle dolduruyor, kaçağı faturadan sonra arıyor. Ön ankette (9 kişi: yönetici, teknik personel, tesisatçı, sakin) 8'i haftalık karneyi yararlı buldu, 4'ü kaçak ya da şamandıra arızası yaşamış; ödeme isteği varsayım (3 evet, 4 fiyatına bağlı)."),
  "03": ((71, 714, 567, 837),
   "Şamandıra depoyu her zaman tam doldurur; Keraflo Tanktronic gibi sistemler seviyeyi elle girilen takvime göre ayarlar, kesinti riski ve suyun depoda bekleme süresi hesaba girmez. Grundfos SCALA2 ve DAB Esybox gibi pompalar kaçakta yalnız evet/hayır alarmı verir; kaçağın debisi, maliyeti ve türü (boru mu, klozet rezervuarı mı) bilinmez."),
  "04": ((624, 714, 1120, 837),

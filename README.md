@@ -177,7 +177,7 @@ python src\data.py            # data/sample/synthetic_pump.csv'yi yeniden üreti
 
 Site yöneticileri, kapıcılar ve tesisatçılar için 3 dakikalık anket: **https://form.jotform.com/263266805000045**
 
-Soruların amacı, "site yönetimi depo ve kaçak kararlarını bugün veri olmadan veriyor ve haftalık bir su karnesi işine yarar" varsayımını (kanvas Soru 2 ve Soru 8) sınamak. Gönderme rehberi ve cevap tablosu: [`docs/hizli-dogrulama.md`](docs/hizli-dogrulama.md).
+Soruların amacı, "site yönetimi depo ve kaçak kararlarını bugün veri olmadan veriyor ve haftalık bir su karnesi işine yarar" varsayımını (kanvas Soru 2 ve Soru 8) sınamak. Gönderme rehberi: [`docs/hizli-dogrulama.md`](docs/hizli-dogrulama.md). **Sonuçlar (9 cevap):** [`docs/anket-sonuclari.md`](docs/anket-sonuclari.md). 8 kişi haftalık karneyi yararlı buldu, 4 kişi daha önce kaçak ya da şamandıra arızası yaşamış.
 
 ### Tanıtım sayfası: masaüstü ve telefon sürümü
 

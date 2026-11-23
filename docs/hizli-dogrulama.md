@@ -1,4 +1,6 @@
-# Hızlı kullanıcı doğrulaması (teslimden önce yapılabilir)
+# Hızlı kullanıcı doğrulaması
+
+> **Durum (24 Kasım 2026):** 9 cevap toplandı. Sonuçlar: [`anket-sonuclari.md`](anket-sonuclari.md)
 
 Amaç: "Site yönetimi bu kararları bugün veri olmadan veriyor ve bu bilgi işine yarar" varsayımını (Soru 2 ve Soru 8, varsayım 3) en az birkaç gerçek cevapla desteklemek. Tam mülakat rehberi: `docs/interview-guide.md`.
 

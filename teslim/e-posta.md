@@ -19,7 +19,7 @@ NABIZ, Wilo-Monitor'a eklenen bir modül olarak tasarlandı.
 - **Tanıtım videosu (3 dk 22 sn):** https://youtu.be/8tXAEV-C_Ig
 - **Simülasyon ve tanıtım sayfası:** https://sayko89.github.io/willo/
 
-Doğrulanmamış bilgiler "varsayım" olarak işaretlidir; sayısal sonuçlar simülasyondan gelmektedir. Yöntemi, tahminciyi kurarken kullanmadığımız bina ve kullanım koşullarında da test ettik (≥10 L/sa kaçaklarda %97 tespit) ve tank boyunun tespit eşiğine etkisini ölçtük; ayrıntılar repodaki results/strengthen.md dosyasında.
+Doğrulanmamış bilgiler "varsayım" olarak işaretlidir; sayısal sonuçlar simülasyondan gelmektedir. Yöntemi, tahminciyi kurarken kullanmadığımız bina ve kullanım koşullarında da test ettik (≥10 L/sa kaçaklarda %97 tespit) ve tank boyunun tespit eşiğine etkisini ölçtük; ayrıntılar repodaki results/strengthen.md dosyasında. 9 kişilik bir ön kullanıcı anketi de yaptık (yönetici, teknik personel, tesisatçı, sakin): 8'i haftalık su karnesini yararlı buldu (docs/anket-sonuclari.md).
 
 Saygılarımızla,
 Periapsis

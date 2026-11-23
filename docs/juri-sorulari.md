@@ -23,7 +23,12 @@ Fizik, ölçülecek büyüklüğü veriyor. Yapay zekânın işi şunlar:
 Her bina farklı olduğu için kural bina bina elle ayarlanamaz; model her binada kendi kendine kalibre oluyor.
 
 ### 4. "Site yöneticisi buna gerçekten ihtiyaç duyuyor mu, para öder mi?"
-Henüz doğrulamadık, kanvasta "varsayım" olarak işaretli. Kısa anket hazır (`docs/hizli-dogrulama.md`), finalden önce 3 görüşme planlı (`docs/interview-guide.md`). Problemin varlığı yayımlanmış saha çalışmalarına dayanıyor (Diyarbakır, Adana, İzmir kesintileri). Ödeme kanalı: WiloCare aylık paketi; ödeyen site yönetim firması.
+Ön ankette 9 kişiye sorduk: yönetici, site firması, teknik personel, tesisatçı ve sakin (`docs/anket-sonuclari.md`).
+- 8'i haftalık karneyi yararlı buldu. Hayır diyen tek kişinin binasında depo da hidrofor da yok.
+- 4'ü daha önce kaçak ya da şamandıra arızası yaşamış: bodrumda boru kaçağı, hidrofor bağlantısında kaçak, taşma.
+- Ödemeye 3 kişi "evet", 4 kişi "fiyatına bağlı" dedi. Fiyatı henüz sormadık, ödeme isteği hâlâ varsayım.
+
+Bu bir ön doğrulama. Örneklem küçük ve ekibin çevresinden; cevaplar ekip tarafından forma işlendi. Finalden önce yüz yüze görüşmelerle fiyat sorusunu netleştireceğiz. Ödeme kanalı: WiloCare aylık paketi; ödeyen site yönetim firması.
 
 ### 5. "Neden iki fikir? Hangisi asıl?"
 Asıl ürün gece kaçağı. Depo önerisi, aynı veriden (pompa + depo seviyesi) gelen ikinci kazanç. Ek donanım yalnızca bir seviye sensörü ve motorlu vana. Tek kullanıcı (site yönetimi), tek nokta (bodrum), tek ekran (haftalık karne).
