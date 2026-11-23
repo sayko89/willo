@@ -59,7 +59,7 @@ NABIZ ayrı bir cihaz olarak değil, Wilo'nun uzaktan izleme platformu [Wilo-Mon
   - [`teslim/Periapsis_NABIZ_Proje_Fikri_Kanvasi.pdf`](teslim/Periapsis_NABIZ_Proje_Fikri_Kanvasi.pdf): Wilo'nun Proje Fikri Kanvası, 8 sorunun 1–2 cümlelik yanıtları, takım üyeleri ve rolleri
   - [`teslim/NABIZ_Proje_Fikri.pdf`](teslim/NABIZ_Proje_Fikri.pdf) ([pptx](teslim/NABIZ_Proje_Fikri.pptx)): 10 sayfalık sunum, 8 sorunun kaynaklı ayrıntısı
   - [`teslim/e-posta.md`](teslim/e-posta.md): teslim e-postası
-- **Tanıtım videosu (opsiyonel):** [`video/Periapsis_NABIZ_Video.mp4`](video/Periapsis_NABIZ_Video.mp4), 3 dk 22 sn, altyazılı ve sessiz; sunum sahneleri ve iki animasyonlu simülasyon (gece kaçağı, taze depo). Seslendirme metni: [`video/NABIZ_video_metni.txt`](video/NABIZ_video_metni.txt)
+- **Tanıtım videosu (opsiyonel):** [YouTube](https://youtu.be/8tXAEV-C_Ig) · [`video/Periapsis_NABIZ_Video.mp4`](video/Periapsis_NABIZ_Video.mp4), 3 dk 22 sn, altyazılı ve sessiz; sunum sahneleri ve iki animasyonlu simülasyon (gece kaçağı, taze depo). Seslendirme metni: [`video/NABIZ_video_metni.txt`](video/NABIZ_video_metni.txt)
 - **Kanvas metni ve kaynaklar:** [`docs/canvas-draft.md`](docs/canvas-draft.md)
 - **Ek deneyler (büyük tank, model dışı test):** [`results/strengthen.md`](results/strengthen.md)
 - **Jüri soruları ve cevaplarımız:** [`docs/juri-sorulari.md`](docs/juri-sorulari.md) · **Hızlı kullanıcı anketi:** [`docs/hizli-dogrulama.md`](docs/hizli-dogrulama.md)
