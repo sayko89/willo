@@ -11,6 +11,10 @@ Amaç: "Site yönetimi bu kararları bugün veri olmadan veriyor ve bu bilgi iş
 
 Hedef: 24 Kasım akşamına kadar **en az 3 cevap**. Telefonla 5–10 dakika ya da aşağıdaki mesajla.
 
+## Online form
+
+Anket formu: https://form.jotform.com/263266805000045 (cevaplar Jotform'da toplanıyor).
+
 ## WhatsApp mesajı (kopyala-yapıştır)
 
 > Merhaba, ben Safiye. Üniversite takımımızla Wilo'nun su yönetimi yarışmasına katılıyoruz; apartman su depoları ve kaçaklar üzerine bir fikir geliştiriyoruz. Yöneticilik deneyiminize dayanarak 5 kısa soruyu yanıtlayabilir misiniz? 3 dakikanızı alır, isminizi kullanmayacağız.
