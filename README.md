@@ -1,9 +1,9 @@
 <p align="center">
-  <a href="https://ugurfurkanyesil-rgb.github.io/wilo-hackathon/"><img src="docs/img/banner.svg" alt="NABIZ — Bodrumdaki hidrofor, binanın su nabzını zaten tutuyor" width="100%"></a>
+  <a href="https://sayko89.github.io/willo/"><img src="docs/img/banner.svg" alt="NABIZ — Bodrumdaki hidrofor, binanın su nabzını zaten tutuyor" width="100%"></a>
 </p>
 
 <p align="center">
-  <a href="https://ugurfurkanyesil-rgb.github.io/wilo-hackathon/"><img alt="Canlı demo" src="https://img.shields.io/badge/canl%C4%B1%20demo-a%C3%A7-2EC4C6?style=for-the-badge"></a>
+  <a href="https://sayko89.github.io/willo/"><img alt="Canlı demo" src="https://img.shields.io/badge/canl%C4%B1%20demo-a%C3%A7-2EC4C6?style=for-the-badge"></a>
   <a href="teslim/NABIZ_Proje_Fikri.pdf"><img alt="Sunum PDF" src="https://img.shields.io/badge/sunum-PDF-E4572E?style=for-the-badge"></a>
 </p>
 
@@ -12,7 +12,7 @@
   <img alt="Alan: Binalar" src="https://img.shields.io/badge/alan-Binalar-2EC4C6">
   <img alt="Durum: proje fikri + simülasyon" src="https://img.shields.io/badge/durum-proje%20fikri%20%2B%20sim%C3%BClasyon-E4572E">
   <img alt="Python 3.13" src="https://img.shields.io/badge/python-3.13-0B2E33">
-  <a href="https://github.com/ugurfurkanyesil-rgb/wilo-hackathon/actions/workflows/pages.yml"><img alt="Pages" src="https://github.com/ugurfurkanyesil-rgb/wilo-hackathon/actions/workflows/pages.yml/badge.svg"></a>
+  <a href="https://github.com/sayko89/willo/actions/workflows/pages.yml"><img alt="Pages" src="https://github.com/sayko89/willo/actions/workflows/pages.yml/badge.svg"></a>
 </p>
 
 **Takım Periapsis:** Safiye Özkan · Emir Metin · Uğur Furkan Yeşil · **Alan:** Binalar · **Etkinlik:** Water AI Hackathon 2026 (Wilo Türkiye x imece)
@@ -54,7 +54,7 @@ NABIZ ayrı bir cihaz olarak değil, Wilo'nun uzaktan izleme platformu [Wilo-Mon
 
 ## Dene
 
-- **Canlı prototip: [ugurfurkanyesil-rgb.github.io/wilo-hackathon](https://ugurfurkanyesil-rgb.github.io/wilo-hackathon/)**. Kaçak simülasyonu tarayıcıda çalışır; kaydırıcılarla kaçak debisi, türü, gece kullanımı ve tank boyu değiştirilebilir. Kaynak: [`site/index.html`](site/index.html).
+- **Canlı prototip: [sayko89.github.io/willo](https://sayko89.github.io/willo/)**. Kaçak simülasyonu tarayıcıda çalışır; kaydırıcılarla kaçak debisi, türü, gece kullanımı ve tank boyu değiştirilebilir. Kaynak: [`site/index.html`](site/index.html).
 - **Ara teslim (24 Kasım 23:59, imece@imece.com, konu: "Water AI Hackathon - Periapsis Proje Fikri"):**
   - [`teslim/Periapsis_NABIZ_Proje_Fikri_Kanvasi.pdf`](teslim/Periapsis_NABIZ_Proje_Fikri_Kanvasi.pdf): Wilo'nun Proje Fikri Kanvası, 8 sorunun 1–2 cümlelik yanıtları, takım üyeleri ve rolleri
   - [`teslim/NABIZ_Proje_Fikri.pdf`](teslim/NABIZ_Proje_Fikri.pdf) ([pptx](teslim/NABIZ_Proje_Fikri.pptx)): 10 sayfalık sunum, 8 sorunun kaynaklı ayrıntısı
@@ -62,7 +62,7 @@ NABIZ ayrı bir cihaz olarak değil, Wilo'nun uzaktan izleme platformu [Wilo-Mon
 - **Tanıtım videosu (opsiyonel):** [`video/Periapsis_NABIZ_Video.mp4`](video/Periapsis_NABIZ_Video.mp4), 3 dk 22 sn, altyazılı ve sessiz; sunum sahneleri ve iki animasyonlu simülasyon (gece kaçağı, taze depo). Seslendirme metni: [`video/NABIZ_video_metni.txt`](video/NABIZ_video_metni.txt)
 - **Kanvas metni ve kaynaklar:** [`docs/canvas-draft.md`](docs/canvas-draft.md)
 
-<p align="center"><a href="https://ugurfurkanyesil-rgb.github.io/wilo-hackathon/#kacak"><img src="docs/img/prototype.png" alt="Canlı prototip: bina kesiti, hidrofor ve NABIZ'ın gördüğü duruş süreleri" width="90%"></a></p>
+<p align="center"><a href="https://sayko89.github.io/willo/#kacak"><img src="docs/img/prototype.png" alt="Canlı prototip: bina kesiti, hidrofor ve NABIZ'ın gördüğü duruş süreleri" width="90%"></a></p>
 
 ---
 

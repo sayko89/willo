@@ -16,7 +16,7 @@ NABIZ, Wilo-Monitor'a eklenen bir modül olarak tasarlandı.
 
 - **Proje Fikri Kanvası:** 8 sorunun kısa yanıtları (ek 1)
 - **Sunum:** Aynı soruların kaynaklı ve simülasyon sonuçlu ayrıntısı, 10 sayfa (ek 2)
-- **Simülasyon ve tanıtım sayfası:** https://ugurfurkanyesil-rgb.github.io/wilo-hackathon/
+- **Simülasyon ve tanıtım sayfası:** https://sayko89.github.io/willo/
 
 Doğrulanmamış bilgiler "varsayım" olarak işaretlidir; sayısal sonuçlar simülasyondan gelmektedir.
 
