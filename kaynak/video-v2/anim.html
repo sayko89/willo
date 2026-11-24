@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Inter;src:url(fonts/Inter-Regular.otf);font-weight:400}
+@font-face{font-family:Inter;src:url(fonts/Inter-Medium.otf);font-weight:500}
+@font-face{font-family:Inter;src:url(fonts/Inter-SemiBold.otf);font-weight:600}
+@font-face{font-family:Inter;src:url(fonts/Inter-Bold.otf);font-weight:700}
+@font-face{font-family:Inter;src:url(fonts/Inter-ExtraBold.otf);font-weight:800}
+html,body{margin:0;background:#000}
+canvas{display:block}
+</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+const W=1920,H=1080,FPS=30,XF=0.7;
+const C={bg:'#0B2E33',bg2:'#071E22',ink2:'#12424A',line:'#1E5A62',aqua:'#2EC4C6',teal:'#0F7C83',green:'#2EC4A6',
+  coral:'#E4572E',amber:'#F2B134',txt:'#D7ECEC',muted:'#9FD8D9',white:'#FFFFFF',dim:'#5E8C90'};
+let DATA=null, LOGO=null;
+const cv=document.getElementById('c'), main=cv.getContext('2d');
+const offA=document.createElement('canvas'),offB=document.createElement('canvas');
+offA.width=offB.width=W;offA.height=offB.height=H;
+const A=offA.getContext('2d'),B=offB.getContext('2d');
+
+// ---------- helpers ----------
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const ease=t=>{t=clamp(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
+const eout=t=>{t=clamp(t);return 1-Math.pow(1-t,3)};
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+function fade(t,a,b,o=0.5){return clamp((t-a)/o)*clamp((b-t)/o)}
+function txt(g,s,x,y,size,color=C.txt,weight=500,align='left',alpha=1,base='alphabetic'){
+  g.save();g.globalAlpha*=alpha;g.font=`${weight} ${size}px Inter`;g.fillStyle=color;g.textAlign=align;g.textBaseline=base;g.fillText(s,x,y);g.restore();}
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+function bgfill(g,night=0){
+  const gr=g.createRadialGradient(W*.5,H*.35,50,W*.5,H*.5,W*.75);
+  gr.addColorStop(0,mix('#0F3A40','#081A2A',night));gr.addColorStop(1,mix('#061B1F','#030A14',night));
+  g.fillStyle=gr;g.fillRect(0,0,W,H);}
+function hex(c){c=c.replace('#','');return[parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)]}
+function mix(a,b,t){const x=hex(a),y=hex(b);return`rgb(${x.map((v,i)=>Math.round(lerp(v,y[i],clamp(t)))).join(',')})`}
+function waterColor(age){ // fresh aqua -> murky olive with age (h)
+  const t=clamp(age/50);return t<.5?mix('#2EC4C6','#5FA88E',t*2):mix('#5FA88E','#8A8A55',(t-.5)*2)}
+function drop(g,x,y,s,color=C.aqua,alpha=1){g.save();g.globalAlpha*=alpha;g.translate(x,y);g.scale(s,s);
+  g.beginPath();g.moveTo(0,-1);g.bezierCurveTo(0,-1,-.62,-.18,-.62,.2);g.arc(0,.2,.62,Math.PI,0,true);g.bezierCurveTo(.62,-.18,0,-1,0,-1);
+  g.fillStyle=color;g.fill();g.restore();}
+function kicker(g,s,x,y,alpha=1){txt(g,s,x,y,22,C.green,700,'left',alpha);}
+function title(g,s,x,y,alpha=1,size=54){txt(g,s,x,y,size,C.white,800,'left',alpha);}
+function caption(g,lines,t){ // lines: [[t0,t1,text],...]
+  for(const [a,b,s] of lines){const al=fade(t,a,b,.3);if(al<=0)continue;
+    g.save();g.globalAlpha=al;g.font='500 38px Inter';const w=g.measureText(s).width;
+    g.fillStyle='rgba(3,16,19,.72)';rr(g,W/2-w/2-28,H-118,w+56,64,14);g.fill();
+    g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(s,W/2,H-86);g.restore();}}
+function pill(g,s,x,y,color,alpha=1,size=24){g.save();g.globalAlpha*=alpha;g.font=`700 ${size}px Inter`;const w=g.measureText(s).width;
+  g.fillStyle=color;rr(g,x,y,w+36,size+22,(size+22)/2);g.fill();g.fillStyle=C.bg;g.textBaseline='middle';g.fillText(s,x+18,y+(size+22)/2+1);g.restore();return w+36}
+function card(g,x,y,w,h,alpha=1,border=C.line,fill='rgba(18,66,74,.92)'){g.save();g.globalAlpha*=alpha;rr(g,x,y,w,h,18);g.fillStyle=fill;g.fill();g.lineWidth=2;g.strokeStyle=border;g.stroke();g.restore();}
+
+// tank vessel with water
+function tank(g,x,y,w,h,level,wcol,label,alpha=1){g.save();g.globalAlpha*=alpha;
+  rr(g,x,y,w,h,16);g.fillStyle='rgba(255,255,255,.04)';g.fill();
+  g.save();rr(g,x,y,w,h,16);g.clip();const lh=h*clamp(level);
+  const gr=g.createLinearGradient(0,y+h-lh,0,y+h);gr.addColorStop(0,wcol);gr.addColorStop(1,mix(wcol.startsWith('#')?wcol:'#2EC4C6','#0B2E33',.35));
+  g.fillStyle=wcol;g.globalAlpha*=.9;g.fillRect(x,y+h-lh,w,lh);g.restore();
+  g.lineWidth=4;g.strokeStyle='#CFE7E8';rr(g,x,y,w,h,16);g.stroke();
+  if(label)txt(g,label,x+w/2,y+h+42,26,C.txt,600,'center');g.restore();}
+function pumpIcon(g,x,y,s,on,t,alpha=1){g.save();g.globalAlpha*=alpha;g.translate(x,y);
+  g.beginPath();g.arc(0,0,34*s,0,7);g.fillStyle=on?C.green:'#2A4E54';g.fill();g.lineWidth=4;g.strokeStyle='#CFE7E8';g.stroke();
+  g.save();g.rotate(on?t*14:0);for(let i=0;i<4;i++){g.rotate(Math.PI/2);g.beginPath();g.ellipse(0,-14*s,6*s,13*s,0,0,7);g.fillStyle='#E9FFFB';g.fill();}g.restore();g.restore();}
+function heart(g,x,y,s,color,alpha=1){g.save();g.globalAlpha*=alpha;g.translate(x,y);g.scale(s,s);g.beginPath();
+  g.moveTo(0,.35);g.bezierCurveTo(-1,-.35,-.5,-1,0,-.45);g.bezierCurveTo(.5,-1,1,-.35,0,.35);g.fillStyle=color;g.fill();g.restore();}
+
+// ---------- building cross-section ----------
+function building(g,t,o){ // o: {night, tankLevel, waterAge, mainOff, leak, dripT}
+  const bx=260,by=200,bw=640,fh=92,floors=5;
+  g.save();
+  // ground
+  g.fillStyle='#0A2328';g.fillRect(0,by+floors*fh,W,H);
+  g.strokeStyle='#1E5A62';g.lineWidth=3;g.beginPath();g.moveTo(0,by+floors*fh);g.lineTo(W,by+floors*fh);g.stroke();
+  // body
+  g.fillStyle='#123E45';g.fillRect(bx,by,bw,floors*fh);
+  g.beginPath();g.moveTo(bx-30,by);g.lineTo(bx+bw/2,by-90);g.lineTo(bx+bw+30,by);g.closePath();g.fillStyle='#0F3439';g.fill();
+  for(let f=0;f<floors;f++){const y=by+f*fh;g.strokeStyle='#1E5A62';g.beginPath();g.moveTo(bx,y+fh);g.lineTo(bx+bw,y+fh);g.stroke();
+    for(let k=0;k<4;k++){const wx=bx+40+k*150,wy=y+30;const lit=(Math.sin(f*7+k*3)>-.2);
+      rr(g,wx,wy-12,100,52,6);g.fillStyle=lit?mix('#F2D27A','#1A3A40',o.night*(k%3===0&&f===2?.2:1)):'#1A3A40';g.fill();}}
+  // riser pipe
+  g.strokeStyle='#7FB3B5';g.lineWidth=8;g.beginPath();g.moveTo(bx+bw-30,by+floors*fh+120);g.lineTo(bx+bw-30,by+20);g.stroke();
+  // basement
+  const gy=by+floors*fh;g.fillStyle='#08191C';g.fillRect(bx-40,gy,bw+80,230);
+  txt(g,'BODRUM',bx-20,gy+36,20,C.dim,700);
+  // city main
+  g.strokeStyle=o.mainOff?C.coral:'#7FB3B5';g.lineWidth=12;g.beginPath();g.moveTo(0,gy+120);g.lineTo(bx+40,gy+120);g.stroke();
+  if(o.mainOff){g.save();g.translate(150,gy+120);g.strokeStyle=C.coral;g.lineWidth=8;g.beginPath();g.moveTo(-22,-22);g.lineTo(22,22);g.moveTo(22,-22);g.lineTo(-22,22);g.stroke();g.restore();
+    txt(g,'Şebeke kesik',150,gy+80,24,C.coral,700,'center');}
+  else{for(let i=0;i<4;i++){const px=((t*160+i*60)%(bx+40));drop(g,px,gy+120,7,'#BFF3F3',.8)}}
+  // tank
+  tank(g,bx+70,gy+40,220,150,o.tankLevel,waterColor(o.waterAge),null);
+  txt(g,'Depo',bx+180,gy+218,22,C.muted,600,'center');
+  pumpIcon(g,bx+420,gy+120,1,o.pumpOn,t);
+  txt(g,'Hidrofor',bx+420,gy+182,22,C.muted,600,'center');
+  g.strokeStyle='#7FB3B5';g.lineWidth=8;g.beginPath();g.moveTo(bx+290,gy+120);g.lineTo(bx+386,gy+120);g.moveTo(bx+454,gy+120);g.lineTo(bx+bw-30,gy+120);g.stroke();
+  // leak: toilet on floor 3
+  if(o.leak){const fx=bx+430,fy=by+2*fh+62;
+    g.fillStyle='#E8F1F1';rr(g,fx,fy-26,46,30,5);g.fill();rr(g,fx+6,fy+6,60,26,10);g.fill();
+    for(let i=0;i<3;i++){const p=((o.dripT||t)*0.9+i/3)%1;drop(g,fx+40,fy+34+p*50,9,C.aqua,1-p)}
+    g.beginPath();g.arc(fx+30,fy+10,70+10*Math.sin(t*5),0,7);g.strokeStyle=`rgba(228,87,46,${.35+.25*Math.sin(t*5)})`;g.lineWidth=4;g.stroke();}
+  g.restore();}
+
+// ---------- scenes ----------
+const S=[];
+// 1 intro
+S.push({d:9,draw(g,t){bgfill(g);
+  const a=fade(t,0.2,5.2,.8);
+  if(LOGO){g.save();g.globalAlpha=a;const s=.95+.05*eout(t/5);const w=1100*s,h=w*760/1200;g.drawImage(LOGO,W/2-w/2,H/2-h/2-30,w,h);g.restore();}
+  const b=seg(t,5,6.2);
+  txt(g,'NABIZ',W/2,H/2-20,190,C.white,800,'center',b);
+  txt(g,'Bodrumdaki hidrofor, binanın su nabzını zaten tutuyor.',W/2,H/2+80,44,C.green,500,'center',seg(t,5.6,6.8));
+  // heartbeat line under
+  if(t>5.8){g.save();g.globalAlpha=seg(t,5.8,6.6);g.strokeStyle=C.aqua;g.lineWidth=5;g.beginPath();const p=seg(t,5.8,8.6);
+    for(let i=0;i<=200*p;i++){const x=W/2-500+i*5;const u=(i%50)/50;let y=H/2+170;if(u>.4&&u<.46)y-=60;else if(u>=.46&&u<.52)y+=40;g.lineTo(x,y)}g.stroke();g.restore();}
+  caption(g,[[0.4,4.8,'Merhaba, biz Periapsis.'],[5.2,9,'Projemizin adı NABIZ.']],t);}});
+// 2 problem
+S.push({d:24,draw(g,t){const night=seg(t,14,16);bgfill(g,night);
+  const mainOff=t>3&&t<14; const level=t<3?lerp(.55,1,eout(t/3)):1;
+  const age=t<6?8:lerp(8,48,seg(t,6,14)); const drip=t>15;
+  building(g,t,{night,tankLevel:level,waterAge:t>14?48:age,mainOff,leak:drip,pumpOn:drip?(Math.sin(t*1.3)>.6):(t<3)});
+  // right side panel
+  const x=1060;
+  if(t<14){kicker(g,'PROBLEM',x,190,fade(t,.2,13.8));
+    title(g,'Kesinti korkusu,',x,260,fade(t,.4,13.8));title(g,'hep dolu depo',x,326,fade(t,.6,13.8));
+    // clock card
+    card(g,x,380,680,150,fade(t,1,13.8));txt(g,'Kesinti takvimi',x+30,430,24,C.muted,600,'left',fade(t,1,13.8));
+    txt(g,'08:00 – 22:00',x+30,495,52,C.coral,800,'left',fade(t,1.4,13.8));
+    // age card
+    const a2=fade(t,6,13.8);card(g,x,560,680,170,a2);txt(g,'Depodaki suyun yaşı',x+30,610,24,C.muted,600,'left',a2);
+    txt(g,`${Math.round(age)} saat`,x+30,690,64,mix('#2EC4C6','#C9B26A',seg(age,8,48)),800,'left',a2);
+    drop(g,x+600,650,40,waterColor(age),a2);
+    txt(g,'Diyarbakır, 200 konut: koliformlu örnek depo girişinde %35, çıkışında %52',x,780,22,C.txt,500,'left',fade(t,9,13.8));}
+  else{const a3=fade(t,14.6,24.5);kicker(g,'VE GECE',x,190,a3);title(g,'Kimse görmeden',x,260,a3);title(g,'akan su',x,326,a3);
+    const k=seg(t,16,22);card(g,x,390,680,350,a3);
+    txt(g,'Saatte 5 litrelik kaçak',x+30,445,26,C.muted,600,'left',a3);
+    txt(g,`${(3.6*k).toFixed(1).replace('.',',')} m³ su`,x+30,540,80,C.aqua,800,'left',a3);
+    txt(g,`≈ ${Math.round(241*k)} TL`,x+30,650,80,C.coral,800,'left',a3);txt(g,'ayda, ortak faturaya',x+30,700,26,C.muted,600,'left',a3);
+    txt(g,'İSKİ, Kasım 2026: 66,91 TL/m³',x,770,20,C.dim,500,'left',a3);}
+  caption(g,[[0.3,6,'Kesintiler apartmanları bodrum deposuna bağımlı yaptı.'],[6.2,13.8,'Depo hep tam doluyken su günlerce bekliyor ve bozuluyor.'],
+    [14.4,24,'Gece kaçakları ise kimse fark etmeden faturaya yansıyor.']],t);}});
+// 3 heartbeat monitor
+function monitorLane(g,x,y,w,h,arr,on,prog,color,label,t){
+  card(g,x,y,w,h,1,C.line,'rgba(4,20,23,.9)');
+  g.save();rr(g,x,y,w,h,18);g.clip();
+  g.strokeStyle='rgba(46,196,198,.08)';g.lineWidth=1;for(let i=1;i<20;i++){g.beginPath();g.moveTo(x+i*w/20,y);g.lineTo(x+i*w/20,y+h);g.stroke()}
+  for(let i=1;i<6;i++){g.beginPath();g.moveTo(x,y+i*h/6);g.lineTo(x+w,y+i*h/6);g.stroke()}
+  const n=Math.floor(arr.length*prog);const sx=w/arr.length;
+  g.strokeStyle=color;g.lineWidth=4;g.shadowColor=color;g.shadowBlur=14;g.beginPath();
+  for(let i=0;i<n;i++){const px=x+i*sx,py=y+h-30-(arr[i]-2.8)/(4.2-2.8)*(h-70);i?g.lineTo(px,py):g.moveTo(px,py)}g.stroke();
+  g.shadowBlur=0;if(n>0){const px=x+n*sx,py=y+h-30-(arr[n-1]-2.8)/(1.4)*(h-70);g.beginPath();g.arc(px,py,8,0,7);g.fillStyle='#fff';g.fill();}
+  g.restore();
+  txt(g,label,x+24,y+42,26,color,700);
+  // hours axis
+  for(let hh=0;hh<=5;hh++)txt(g,`0${hh}:00`,x+hh*w/5,y+h+30,18,C.dim,500,hh===0?'left':hh===5?'right':'center');
+}
+S.push({d:26,draw(g,t){bgfill(g,.85);
+  kicker(g,'İÇGÖRÜ',120,140,fade(t,.2,26));title(g,'Pompa, binanın kalbi gibi atıyor',120,210,fade(t,.3,26));
+  const prog=ease(seg(t,3.5,22));
+  const n0=DATA.none,n1=DATA.pipe;
+  monitorLane(g,120,260,1280,270,n0.p,n0.on,prog,C.aqua,'Kaçaksız bina · gece',t);
+  monitorLane(g,120,600,1280,270,n1.p,n1.on,prog,C.coral,'Saatte 10 L kaçağı olan bina · gece',t);
+  // beat counters with heart
+  for(const [k,y,c] of [[n0,260,C.aqua],[n1,600,C.coral]]){
+    const idx=Math.min(k.on.length-1,Math.floor(k.on.length*prog));let beats=0,prev=0;for(let i=0;i<=idx;i++){if(k.on[i]&&!prev)beats++;prev=k.on[i]}
+    const beating=k.on[idx];const s=beating?1.15+.1*Math.sin(t*20):1;
+    card(g,1440,y,360,270,1,C.line,'rgba(4,20,23,.9)');heart(g,1620,y+95,58*s,c);
+    txt(g,String(beats),1620,y+205,72,C.white,800,'center');txt(g,'pompa kalkışı',1620,y+245,22,C.muted,600,'center');}
+  caption(g,[[0.4,7.5,'Basınç tankı boşalınca pompa kalkar: her kalkış bir nabız atışı.'],
+    [7.7,15.5,'Gece kimse su kullanmazken sağlıklı bir binanın nabzı neredeyse durur.'],
+    [15.7,26,'Kaçak varsa pompa bütün gece düzenli atar. NABIZ bu ritmi dinler.']],t);}});
+// 4 measure T_off
+S.push({d:22,draw(g,t){bgfill(g,.6);
+  kicker(g,'NASIL ÖLÇÜYOR',120,140,fade(t,.2,22));title(g,'İki atış arasındaki sessizlik = kaçağın debisi',120,210,fade(t,.3,22));
+  // pressure vessel
+  const cyc=9; const u=(t-1)%cyc/cyc; const filling=u>.88; const lvl=filling?lerp(.25,.9,(u-.88)/.12):lerp(.9,.25,u/.88);
+  const vx=240,vy=320,vw=300,vh=460;
+  g.save();rr(g,vx,vy,vw,vh,150);g.fillStyle='rgba(255,255,255,.04)';g.fill();g.clip();
+  g.fillStyle=C.aqua;g.globalAlpha=.85;g.fillRect(vx,vy+vh*(1-lvl),vw,vh*lvl);g.restore();
+  g.lineWidth=5;g.strokeStyle='#CFE7E8';rr(g,vx,vy,vw,vh,150);g.stroke();
+  txt(g,'Basınç tankı',vx+vw/2,vy+vh+50,26,C.muted,600,'center');
+  pumpIcon(g,vx+vw/2,vy-60,1,filling,t);
+  // leak drip from bottom
+  for(let i=0;i<3;i++){const p=(t*1.2+i/3)%1;drop(g,vx+vw+40,vy+vh-40+p*80,10,C.coral,1-p)}
+  g.strokeStyle='#7FB3B5';g.lineWidth=8;g.beginPath();g.moveTo(vx+vw,vy+vh-60);g.lineTo(vx+vw+40,vy+vh-60);g.stroke();
+  // stopwatch
+  const sw=filling?0:u/.88*27; const swx=820,swy=470;
+  g.save();g.globalAlpha=fade(t,1.5,22);g.beginPath();g.arc(swx,swy,120,0,7);g.fillStyle='rgba(4,20,23,.9)';g.fill();g.lineWidth=6;g.strokeStyle=C.line;g.stroke();
+  g.beginPath();g.arc(swx,swy,120,-Math.PI/2,-Math.PI/2+2*Math.PI*sw/30);g.strokeStyle=C.amber;g.lineWidth=10;g.stroke();g.restore();
+  txt(g,`${Math.floor(sw)} dk`,swx,swy+20,58,C.white,800,'center',fade(t,1.5,22));
+  txt(g,'Duruş süresi (T_off)',swx,swy+170,24,C.muted,600,'center',fade(t,1.5,22));
+  // formula
+  const fa=fade(t,7,22);card(g,1080,300,720,260,fa);
+  txt(g,'Kaçak  =  ΔV  ÷  T_off',1120,380,48,C.white,800,'left',fa);
+  txt(g,'4,5 L  ÷  27 dk  ≈  10 L/sa',1120,470,48,C.green,800,'left',seg(t,9,10.5)*fa);
+  txt(g,'ΔV: kurulumda test vanasıyla bir kez ölçülür',1120,525,22,C.muted,500,'left',fa);
+  // error bars
+  const ea=fade(t,13,22);card(g,1080,600,720,250,ea);txt(g,'Simülasyonda debi hatası',1120,650,24,C.muted,600,'left',ea);
+  const k=eout(seg(t,13.5,16));
+  txt(g,'Basit yöntem',1120,712,24,C.txt,600,'left',ea);g.save();g.globalAlpha=ea;g.fillStyle=C.coral;rr(g,1310,690,380*k,30,8);g.fill();g.restore();txt(g,'%131',1310+380*k+14,714,26,C.coral,800,'left',ea);
+  txt(g,'NABIZ',1120,792,24,C.txt,600,'left',ea);g.save();g.globalAlpha=ea;g.fillStyle=C.green;rr(g,1310,770,Math.max(4,380*k*10/131),30,8);g.fill();g.restore();txt(g,'%10',1310+380*k*10/131+14,794,26,C.green,800,'left',ea);
+  caption(g,[[0.4,6.8,'NABIZ iki pompa atışı arasındaki sessizliği ölçer.'],[7,12.8,'Tanktan çekilen su belli; aradaki süre kaçağın debisini verir.'],
+    [13,22,'Gece kullanımını kaçaktan ayırır: hata %10, basit yöntemde %131.']],t);}});
+// 5 type: pipe vs reservoir
+S.push({d:18,draw(g,t){bgfill(g,.6);
+  kicker(g,'KAÇAĞIN TÜRÜ',120,140,fade(t,.2,18));title(g,'Boru mu, klozet rezervuarı mı?',120,210,fade(t,.3,18));
+  const L=[[120,'Boru kaçağı','Basınçla akar: sürekli ve düzgün',C.aqua,'pipe'],[990,'Klozet rezervuarı','Darbelerle dolar: kesik kesik',C.amber,'res']];
+  for(const [x,h,sub,c,kind] of L){const a=fade(t,kind==='pipe'?.6:3.5,18);card(g,x,270,810,600,a);
+    txt(g,h,x+40,330,36,c,800,'left',a);txt(g,sub,x+40,372,24,C.muted,500,'left',a);
+    g.save();g.globalAlpha=a;
+    if(kind==='pipe'){ // pipe with crack spray
+      g.strokeStyle='#9CC9CB';g.lineWidth=40;g.lineCap='round';g.beginPath();g.moveTo(x+80,470);g.lineTo(x+730,470);g.stroke();
+      for(let i=0;i<14;i++){const p=(t*1.5+i/14)%1;const ang=-1.9+((i*37)%10)/10*0.8;drop(g,x+405+Math.cos(ang)*p*120,450+Math.sin(ang)*p*120+p*p*90,6,C.aqua,1-p)}
+    }else{ // toilet tank refilling pulses
+      g.fillStyle='#E8F1F1';rr(g,x+330,400,150,110,10);g.fill();const pulse=(t%3)<.5;
+      g.fillStyle=pulse?C.amber:'#9CC9CB';g.beginPath();g.arc(x+405,455,18,0,7);g.fill();
+      if(pulse){for(let i=0;i<5;i++)drop(g,x+405+(i-2)*14,520+((t%3)*120),7,C.amber,1-(t%3)*2)}
+    }
+    // signature curve
+    const gx=x+60,gy=600,gw=690,gh=230;g.strokeStyle='rgba(46,196,198,.15)';g.lineWidth=1;g.strokeRect(gx,gy,gw,gh);
+    const prog=ease(seg(t,kind==='pipe'?1.2:4.2,kind==='pipe'?8:12));const NP=600,n=Math.floor(NP*prog);
+    g.strokeStyle=c;g.lineWidth=5;g.lineJoin='round';g.beginPath();
+    for(let i=0;i<n;i++){const u=i/NP*4%1;let v;
+      if(kind==='pipe'){v=u<.93?1-Math.pow(u/.93,0.85)*0.85:0.15+(u-.93)/.07*0.85;}
+      else{const step=Math.floor(u/.93*5);v=u<.93?1-step*0.17-((u/.93*5)%1<.08?((u/.93*5)%1)/.08*0.17:0.17)+0.17:0.15+(u-.93)/.07*0.85;}
+      const px=gx+i*gw/NP,py=gy+gh-14-v*(gh-40);i?g.lineTo(px,py):g.moveTo(px,py)}g.stroke();
+    txt(g,(kind==='pipe'?'Basınç izi: düzgün iniş':'Basınç izi: basamaklı iniş')+' (şematik)',gx,gy-14,20,C.dim,600,'left');g.restore();}
+  const ba=seg(t,12.5,13.5);if(ba>0){g.save();g.globalAlpha=ba;g.beginPath();g.arc(W/2,560,110*eout(ba),0,7);g.fillStyle=C.green;g.fill();g.restore();
+    txt(g,'%97',W/2,580,72,C.bg,800,'center',ba);txt(g,'doğru ayrıldı',W/2,625,22,C.bg,700,'center',ba);}
+  caption(g,[[0.4,8.5,'Kaçağın türünü de ayırır: boru kaçağı basınçla düzgün akar.'],[8.7,12.8,'Klozet rezervuarı ise darbelerle dolar.'],[13,18,'İki imza birlikte simülasyonda %97 doğrulukla ayrıldı.']],t);}});
+// 6 tank week
+S.push({d:25,draw(g,t){bgfill(g,.3);
+  kicker(g,'TAZE DEPO',120,140,fade(t,.2,25));title(g,'Kesinti takvimi değişince kim ne yapıyor?',120,210,fade(t,.3,25));
+  const T=DATA.tank,N=T.supply.length;const prog=seg(t,4,21);const hi=Math.min(N-1,Math.floor(N*prog));
+  // supply timeline
+  const tx=120,ty=275,tw=1680;g.save();g.globalAlpha=fade(t,.8,25);
+  for(let i=0;i<N;i++){g.fillStyle=T.supply[i]?'rgba(46,196,198,.35)':'rgba(228,87,46,.75)';g.fillRect(tx+i*tw/N,ty,tw/N+.5,26)}
+  g.fillStyle='#fff';g.fillRect(tx+hi*tw/N-2,ty-10,4,46);g.restore();
+  txt(g,'Şebeke suyu',tx,ty-14,20,C.muted,600,'left',fade(t,.8,25));txt(g,`Gün ${Math.floor(hi/24)+1}`,tx+tw,ty-14,22,C.white,700,'right',fade(t,.8,25));
+  const names=['Şamandıra','Sabit takvim','NABIZ'];const cols=[C.coral,C.amber,C.green];
+  for(let k=0;k<3;k++){const x=180+k*560,y=360;const pol=T.pol[k];const lev=pol.level[hi]/10,age=pol.age[hi];let sa=0;for(let i=0;i<=hi;i++)sa+=pol.age[i];const avg=sa/(hi+1);
+    const a=fade(t,1+k*.4,25);
+    // dry hours so far
+    let dry=0;for(let i=0;i<=hi;i++)if(pol.level[i]<=0.6&&!T.supply[i])dry++;
+    const isDry=pol.level[hi]<=0.6&&!T.supply[hi];
+    card(g,x-40,y-20,480,560,a,isDry?C.coral:(k===2?C.green:C.line));
+    txt(g,names[k],x+200,y+30,32,cols[k],800,'center',a);
+    tank(g,x+60,y+60,280,240,lev,waterColor(age),null,a);
+    if(isDry){txt(g,'SUSUZ!',x+200,y+200,46,C.coral,800,'center',a*(.6+.4*Math.sin(t*12)))}
+    txt(g,'Ort. su yaşı',x+20,y+360,22,C.muted,600,'left',a);txt(g,`${Math.round(avg)} sa`,x+20,y+410,44,mix('#2EC4C6','#C9B26A',seg(avg,10,40)),800,'left',a);
+    txt(g,'Susuz saat',x+380,y+360,22,C.muted,600,'right',a);txt(g,String(dry),x+380,y+410,44,dry?C.coral:C.white,800,'right',a);
+    drop(g,x+200,y+470,22,waterColor(age),a);}
+  caption(g,[[0.4,6.5,'Simülasyon: kesintiler her gün 08–22 arasına kaydığında bir hafta.'],[6.7,13.5,'Şamandıra hep doldurur; su depoda iki güne kadar bekler.'],
+    [13.7,19,'Sabit takvim değişen kesintide depoyu dibe kadar boşaltır.'],[19.2,25,'NABIZ kesinti desenini öğrenir: yedeği korur, suyu taze tutar.']],t);}});
+// 7 phone
+S.push({d:17,draw(g,t){bgfill(g,.2);
+  kicker(g,'YÖNETİCİNİN EKRANI',120,140,fade(t,.2,17));title(g,'Her pazartesi tek ekranda bina su karnesi',120,210,fade(t,.3,17));
+  const px=760,py=245,pw=400,ph=700;const a=eout(seg(t,.4,1.4));
+  g.save();g.translate(0,(1-a)*60);g.globalAlpha=a;
+  rr(g,px,py,pw,ph,48);g.fillStyle='#0A1A1D';g.fill();g.lineWidth=6;g.strokeStyle='#3B6D73';g.stroke();
+  rr(g,px+18,py+18,pw-36,ph-36,34);g.fillStyle='#F4FAFA';g.fill();
+  txt(g,'Bina su karnesi',px+46,py+90,30,'#0B2E33',800);txt(g,'17–23 Kasım · Örnek ekran',px+46,py+124,18,'#5B6B6E',500);
+  const rows=[['Depodaki su yaşı','22 saat','#0F7C83'],['Kesinti yedeği','26 saat','#0F7C83'],['Gece kaçağı','6 L/sa · ≈289 TL/ay','#E4572E'],['Kaçak türü','Rezervuar (olası)','#E4572E'],['Depo temizliği','41 gün sonra','#0F7C83']];
+  rows.forEach((r,i)=>{const ra=eout(seg(t,1.6+i*.6,2.4+i*.6));const y=py+150+i*84;g.save();g.globalAlpha*=ra;g.translate((1-ra)*30,0);
+    rr(g,px+40,y,pw-80,72,14);g.fillStyle=i===2?'#FDECE7':'#E6F2F2';g.fill();
+    txt(g,r[0],px+62,y+29,18,'#5B6B6E',600);txt(g,r[1],px+62,y+58,24,r[2],800);g.restore();});
+  // button
+  const ba=seg(t,6,6.6);const tap=seg(t,7.4,8.2);rr(g,px+40,py+590,pw-80,64,32);g.fillStyle=`rgba(15,124,131,${ba})`;g.fill();
+  txt(g,'Tesisatçıya gönder',px+pw/2,py+631,24,'#fff',700,'center',ba);
+  if(tap>0&&tap<1){g.beginPath();g.arc(px+pw/2,py+622,20+120*tap,0,7);g.fillStyle=`rgba(255,255,255,${.5*(1-tap)})`;g.fill();}
+  g.restore();
+  // notification
+  const na=eout(seg(t,10,10.8))*fade(t,10,17);if(na>0){g.save();g.globalAlpha=na;g.translate(0,(1-na)*-40);
+    card(g,1240,330,560,190,1,C.amber,'rgba(18,66,74,.97)');txt(g,'⚠  Kesinti riski yüksek',1270,385,28,C.amber,800);
+    txt(g,'Yarın 08–22 kesinti bekleniyor.',1270,428,22,C.txt,500);txt(g,'Depoyu doldurayım mı?',1270,462,22,C.txt,500);
+    rr(g,1270,478,150,0,0);pill(g,'Onayla',1590,470,C.green,1,20);g.restore();}
+  // side notes
+  const sa=fade(t,3,17);card(g,120,330,560,330,sa);
+  txt(g,'Wilo-Monitor modülü',150,390,30,C.white,800,'left',sa);
+  ['Ek sayaç yok: pompa verisi yetiyor','Karar hep yöneticide (öneri modu)','Kaçak → tesisatçıya iş emri'].forEach((s,i)=>{drop(g,166,450+i*62,12,C.green,sa);txt(g,s,192,460+i*62,24,C.txt,500,'left',sa)});
+  caption(g,[[0.4,9.8,'Yönetici her pazartesi telefonunda binanın su karnesini görür.'],[10,17,'Kesinti riski artınca öneri gelir; karar hep yöneticide kalır.']],t);}});
+// 8 evidence
+S.push({d:15,draw(g,t){bgfill(g,.2);
+  kicker(g,'KANITLAR',120,140,fade(t,.2,15));title(g,'Sahadan ve simülasyondan',120,210,fade(t,.3,15));
+  // people
+  const yes=[1,1,1,1,1,1,1,1,0];for(let i=0;i<9;i++){const x=180+i*130,y=420;const on=seg(t,1+i*.25,1.5+i*.25)*(yes[i]?1:.35);
+    g.save();g.globalAlpha=fade(t,.6,15);const c=yes[i]?mix('#2A4E54',C.green,on):'#2A4E54';
+    g.beginPath();g.arc(x,y-60,34,0,7);g.fillStyle=c;g.fill();rr(g,x-48,y-16,96,110,40);g.fill();g.restore();
+    const leak=[1,0,0,1,0,1,1,0,0][i]; if(leak&&t>6){drop(g,x+40,y-90,16,C.coral,seg(t,6+i*.1,6.6+i*.1))}}
+  txt(g,'9 kişilik ön anket: 8 kişi haftalık karneyi yararlı buldu',180,600,32,C.white,700,'left',fade(t,3,15));
+  txt(g,'4 kişi daha önce kaçak ya da şamandıra arızası yaşamış',180,648,26,C.coral,600,'left',fade(t,6.5,15));
+  // ring
+  const ra=fade(t,8.5,15);const k=eout(seg(t,8.8,11));g.save();g.globalAlpha=ra;
+  g.lineWidth=26;g.strokeStyle='#1E3F44';g.beginPath();g.arc(1580,480,150,0,7);g.stroke();
+  g.strokeStyle=C.green;g.beginPath();g.arc(1580,480,150,-Math.PI/2,-Math.PI/2+2*Math.PI*.97*k);g.stroke();g.restore();
+  txt(g,`%${Math.round(97*k)}`,1580,505,76,C.white,800,'center',ra);
+  txt(g,'Kurmadığımız bina koşullarında',1580,690,24,C.muted,600,'center',ra);txt(g,'≥10 L/sa kaçak tespiti',1580,724,24,C.muted,600,'center',ra);
+  caption(g,[[0.4,8.3,'Ön ankette 9 kişiden 8\'i haftalık karneyi yararlı buldu.'],[8.5,15,'Farklı bina ve kullanımda bile ≥10 L/sa kaçakların %97\'si bulundu.']],t);}});
+// 9 test day rig
+S.push({d:14,draw(g,t){bgfill(g,.4);
+  kicker(g,'5 ARALIK · CANLI TEST',120,140,fade(t,.2,14));title(g,'Gerçek debiyi teraziyle ölçüp tahminle karşılaştıracağız',120,210,fade(t,.3,14),48);
+  const a=fade(t,.5,14);g.save();g.globalAlpha=a;
+  // bucket
+  g.fillStyle='#2A6A72';g.beginPath();g.moveTo(180,520);g.lineTo(380,520);g.lineTo(355,760);g.lineTo(205,760);g.closePath();g.fill();
+  g.fillStyle=C.aqua;g.globalAlpha=a*.8;g.fillRect(200,560,160,190);g.globalAlpha=a;txt(g,'Su',280,800,22,C.muted,600,'center');
+  g.strokeStyle='#7FB3B5';g.lineWidth=10;g.beginPath();g.moveTo(300,600);g.lineTo(300,470);g.lineTo(520,470);g.stroke();
+  const pon=(t%4)<1.2;pumpIcon(g,560,470,1.1,pon,t);txt(g,'12 V hidrofor',560,560,22,C.muted,600,'center');
+  g.beginPath();g.moveTo(598,470);g.lineTo(780,470);g.stroke();
+  rr(g,780,380,120,180,50);g.fillStyle='rgba(255,255,255,.06)';g.fill();g.strokeStyle='#CFE7E8';g.lineWidth=4;g.stroke();txt(g,'Akümülatör',840,600,22,C.muted,600,'center');
+  g.strokeStyle='#7FB3B5';g.lineWidth=10;g.beginPath();g.moveTo(900,470);g.lineTo(1080,470);g.lineTo(1080,560);g.stroke();
+  g.fillStyle=C.amber;g.beginPath();g.arc(1080,500,16,0,7);g.fill();txt(g,'İğneli vana',1120,505,22,C.amber,700);
+  for(let i=0;i<3;i++){const p=(t*1.1+i/3)%1;drop(g,1080,580+p*120,9,C.aqua,1-p)}
+  // scale
+  rr(g,980,720,200,50,10);g.fillStyle='#CFE7E8';g.fill();rr(g,1010,660,140,60,8);g.fillStyle='rgba(46,196,198,.4)';g.fill();
+  txt(g,`${(t*2.8).toFixed(1).replace('.',',')} g`,1080,755,24,C.bg,800,'center');txt(g,'Terazi',1080,805,22,C.muted,600,'center');
+  g.restore();
+  // laptop compare
+  const la=fade(t,3,14);card(g,1300,330,500,360,la);txt(g,'Canlı karşılaştırma',1330,385,26,C.white,800,'left',la);
+  txt(g,'Gerçek debi (terazi)',1330,460,22,C.muted,600,'left',la);txt(g,'ölçülecek',1330,510,40,C.aqua,800,'left',la);
+  txt(g,'NABIZ tahmini (basınç + duruş)',1330,580,22,C.muted,600,'left',la);txt(g,'tahmin edilecek',1330,630,40,C.green,800,'left',la);
+  caption(g,[[0.4,14,'Hackathon günü 12 V\'luk bir düzenekte kaçak açıp tahmini canlı sınayacağız.']],t);}});
+// 10 end
+S.push({d:8,draw(g,t){bgfill(g);
+  if(LOGO){const a=fade(t,.2,8.2,.8);g.save();g.globalAlpha=a;const w=820,h=w*760/1200;g.drawImage(LOGO,W/2-w/2,90,w,h);g.restore();}
+  txt(g,'Safiye Özkan · Emir Metin · Uğur Furkan Yeşil',W/2,720,34,C.txt,600,'center',seg(t,.8,1.8));
+  txt(g,'sayko89.github.io/willo',W/2,790,30,C.green,700,'center',seg(t,1.2,2.2));
+  caption(g,[[1.5,8,'NABIZ: bina suyunu taze, tesisatı sızdırmaz tutmak için. Teşekkürler!']],t);}});
+
+const starts=[];let acc=0;for(const s of S){starts.push(acc);acc+=s.d}
+const TOTAL=acc;
+function drawScene(i,t,g){g.save();g.clearRect(0,0,W,H);S[i].draw(g,t);g.restore();}
+function render(frame){const time=frame/FPS;let i=0;while(i<S.length-1&&time>=starts[i+1])i++;
+  const t=time-starts[i];
+  drawScene(i,t,A);main.globalAlpha=1;main.drawImage(offA,0,0);
+  if(i>0&&t<XF){drawScene(i-1,S[i-1].d+t,B);main.globalAlpha=1-ease(t/XF);main.drawImage(offB,0,0);main.globalAlpha=1;}
+  if(time<0.6){main.fillStyle=`rgba(0,0,0,${1-time/0.6})`;main.fillRect(0,0,W,H)}
+  if(time>TOTAL-1){main.fillStyle=`rgba(0,0,0,${clamp(time-(TOTAL-1))})`;main.fillRect(0,0,W,H)}
+  return cv.toDataURL('image/jpeg',0.92);}
+window.READY=(async()=>{DATA=await (await fetch('data.json')).json();
+  LOGO=new Image();LOGO.src='logo.png';await LOGO.decode();await document.fonts.load('800 40px Inter');await document.fonts.load('500 40px Inter');await document.fonts.load('600 40px Inter');await document.fonts.load('700 40px Inter');
+  return {TOTAL,starts};})();
+</script></body></html>

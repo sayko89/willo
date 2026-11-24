@@ -1,55 +1,46 @@
-NABIZ — Video anlatım metni (Periapsis)
+NABIZ — Video v2 anlatım metni (Periapsis, 2 dk 58 sn)
 
-[Sahne 1 · 00:00]
-Merhaba, biz Periapsis. Projemizin adı NABIZ.
-Bodrumdaki hidrofor, binanın su nabzını zaten tutuyor. Biz bu sinyali yapay zekâyla okuyoruz.
 
-[Sahne 2 · 00:09]
-Su kesintileri apartmanları bodrum deposuna bağımlı hale getirdi: İzmir'de altı ay gece kesintisi yapıldı, Ankara'da su kontrollü verildi.
-Ama depoda bekleyen su bozuluyor: Diyarbakır'da koliformlu örnek oranı depo girişinde %35, çıkışında %52.
-Gece kaçakları da görünmüyor. Saatte 5 litrelik bir kaçak, ayda 3,6 m³ su ve yaklaşık 241 TL demek.
+[0:00 · Açılış]
+Merhaba, biz Periapsis.
+Projemizin adı NABIZ.
 
-[Sahne 3 · 00:33]
-Bu kararları veren site yöneticisi; depoyu ne kadar dolu tutacağına ve faturanın neden arttığına bugün veri olmadan karar veriyor.
-Şamandıra depoyu hep tam doldurur. Ev tipi pompalar ise kaçakta yalnızca var ya da yok der; ne kadar olduğunu ve nereden geldiğini söylemez.
+[0:09 · Problem]
+Kesintiler apartmanları bodrum deposuna bağımlı yaptı.
+Depo hep tam doluyken su günlerce bekliyor ve bozuluyor.
+Gece kaçakları ise kimse fark etmeden faturaya yansıyor.
 
-[Sahne 4 · 00:51]
-NABIZ, Wilo-Monitor'a eklenen bir yazılım modülü. Kaçak için ek sayaç gerekmiyor, pompanın kalkış sayacı yeterli.
-Depo için bir seviye sensörü ve motorlu vana ekliyoruz. Önce öneri modundayız: NABIZ önerir, karar yöneticide kalır.
+[0:33 · İçgörü: pompanın nabzı]
+Basınç tankı boşalınca pompa kalkar: her kalkış bir nabız atışı.
+Gece kimse su kullanmazken sağlıklı bir binanın nabzı neredeyse durur.
+Kaçak varsa pompa bütün gece düzenli atar. NABIZ bu ritmi dinler.
 
-[Sahne 5 · 01:07]
-Yönetici her pazartesi telefonunda binanın su karnesini görür: suyun yaşı, kesinti yedeği ve gece kaçağı.
-Kaçak bulunduğunda “rezervuar tipi, ayda 289 TL” bilgisi tesisatçıya doğrudan iş emri olur.
+[0:59 · Nasıl ölçüyor]
+NABIZ iki pompa atışı arasındaki sessizliği ölçer.
+Tanktan çekilen su belli; aradaki süre kaçağın debisini verir.
+Gece kullanımını kaçaktan ayırır: hata %10, basit yöntemde %131.
 
-[Sahne 6 · 01:21]
-Yapay zekâ, pompa verisinden binanın tüketim parmak izini öğrenir ve iki karar verir.
-Birincisi, kesinti desenini öğrenip bir sonraki kesintiyi karşılayacak kadar su tutar. İkincisi, kaçağı ölçer ve türünü sınıflandırır.
+[1:21 · Kaçağın türü]
+Kaçağın türünü de ayırır: boru kaçağı basınçla düzgün akar.
+Klozet rezervuarı ise darbelerle dolar.
+İki imza birlikte simülasyonda %97 doğrulukla ayrıldı.
 
-[Sahne 7 · 01:36]
-Simülasyonda iki binanın aynı gecesine bakalım: üstteki kaçaksız, alttakinde saatte 10 litrelik bir boru kaçağı var.
-Kaçak, basınç tankını yavaş yavaş boşaltır; pompa gece boyunca tekrar tekrar kalkar.
-NABIZ bu duruş sürelerinden kaçağın debisini hesaplıyor. Simülasyonda hatamız %10; basit “hacim bölü süre” yönteminde %131.
+[1:39 · Taze depo simülasyonu]
+Simülasyon: kesintiler her gün 08–22 arasına kaydığında bir hafta.
+Şamandıra hep doldurur; su depoda iki güne kadar bekler.
+Sabit takvim değişen kesintide depoyu dibe kadar boşaltır.
+NABIZ kesinti desenini öğrenir: yedeği korur, suyu taze tutar.
 
-[Sahne 8 · 01:58]
-Özgün tarafımız şu: kaçak, pompanın debisinde değil duruş süresinde görünür.
-Rakipler kaçak var ya da yok derken, biz debi, maliyet ve tür veriyoruz.
+[2:04 · Yöneticinin ekranı]
+Yönetici her pazartesi telefonunda binanın su karnesini görür.
+Kesinti riski artınca öneri gelir; karar hep yöneticide kalır.
 
-[Sahne 9 · 02:09]
-Veri Wilo'nun cihazlarında hazır: kontrol ünitesi basıncı ve kalkış sayacını Modbus üzerinden standart olarak veriyor.
-Bilmediklerimizi açıkça Wilo'ya soru olarak yazdık: veri aralığı, sıfır debi eşiği ve pilot için gerçek bir kayıt.
+[2:21 · Kanıtlar]
+Ön ankette 9 kişiden 8'i haftalık karneyi yararlı buldu.
+Farklı bina ve kullanımda bile ≥10 L/sa kaçakların %97'si bulundu.
 
-[Sahne 10 · 02:25]
-Depo tarafı: 180 günlük kesinti senaryosundan, kesintilerin her gün 08–22 arasına kaydığı bir hafta.
-Şamandıra depoyu hep dolu tutar, su iki güne kadar bekler. Sabit takvim ise değişen kesintide depoyu dibe kadar boşaltır.
-NABIZ kesinti desenini öğrenir: yedeği korur, suyu da şamandıradan daha taze tutar.
+[2:36 · 5 Aralık canlı test]
+Hackathon günü 12 V'luk bir düzenekte kaçak açıp tahmini canlı sınayacağız.
 
-[Sahne 11 · 02:46]
-Sonuç: depodaki suyun ortalama bekleme süresi 39 saatten 25 saate iniyor; bulunan her 5 litrelik kaçak ayda 3,6 m³ su kurtarıyor.
-Ana göstergemiz binanın gece kaçak debisi; yanında depo su yaşını takip ediyoruz.
-
-[Sahne 12 · 03:00]
-En kritik varsayımımız: küçük bir kaçağın pompanın duruş süresinden ölçülebilmesi.
-Hackathon günü 12 voltluk bir hidrofor düzeneğinde kaçak açıp gerçek debiyi teraziyle ölçecek, modelin tahminiyle canlı karşılaştıracağız.
-
-[Sahne 13 · 03:16]
+[2:50 · Kapanış]
 NABIZ: bina suyunu taze, tesisatı sızdırmaz tutmak için. Teşekkürler!
